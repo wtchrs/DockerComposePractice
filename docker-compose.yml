@@ -1,0 +1,24 @@
+services:
+
+  app:
+    build: .
+    container_name: app-docker-compose-practice
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/dockerComposePractice?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    restart: always
+
+  db:
+    image: mysql:8.0.33
+    container_name: mysql-docker-compose-practice
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: dockerComposePractice
+    volumes:
+      - ${MYSQL_VOLUME}:/var/lib/mysql
+      - ./mysql/initdb.d:/docker-entrypoint-initdb.d
